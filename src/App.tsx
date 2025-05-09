@@ -10,22 +10,19 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
 import { MachinesPage } from "@/pages/machines/MachinesPage";
+import MachineDetailPage from "./pages/machines/MachineDetailPage";
+import MaintenancePage from "./pages/maintenance/MaintenancePage";
+import MaintenanceTasksPage from "./pages/maintenance/MaintenanceTasksPage";
+import MaintenanceSchedulesPage from "./pages/maintenance/MaintenanceSchedulesPage";
+import InventoryPage from "./pages/inventory/InventoryPage";
+import ReportsPage from "./pages/reports/ReportsPage";
+import AlertsPage from "./pages/alerts/AlertsPage";
+import AnalyticsPage from "./pages/analytics/AnalyticsPage";
+import UsersPage from "./pages/users/UsersPage";
+import SettingsPage from "./pages/settings/SettingsPage";
+import HelpPage from "./pages/help/HelpPage";
+import ProfilePage from "./pages/profile/ProfilePage";
 import NotFound from "./pages/NotFound";
-
-// Import path placeholders for future pages
-// These will need to be created as separate files for each route
-const MachineDetailPage = () => <div>Machine Detail Page - Coming Soon</div>;
-const MaintenancePage = () => <div>Maintenance Page - Coming Soon</div>;
-const MaintenanceTasksPage = () => <div>Maintenance Tasks Page - Coming Soon</div>;
-const MaintenanceSchedulesPage = () => <div>Maintenance Schedules Page - Coming Soon</div>;
-const InventoryPage = () => <div>Inventory Page - Coming Soon</div>;
-const ReportsPage = () => <div>Reports Page - Coming Soon</div>;
-const AlertsPage = () => <div>Alerts Page - Coming Soon</div>;
-const AnalyticsPage = () => <div>Analytics Page - Coming Soon</div>;
-const UsersPage = () => <div>Users Page - Coming Soon</div>;
-const SettingsPage = () => <div>Settings Page - Coming Soon</div>;
-const HelpPage = () => <div>Help Page - Coming Soon</div>;
-const ProfilePage = () => <div>Profile Page - Coming Soon</div>;
 
 const queryClient = new QueryClient();
 
