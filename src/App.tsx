@@ -11,6 +11,7 @@ import { LoginPage } from "@/pages/auth/LoginPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
 import { MachinesPage } from "@/pages/machines/MachinesPage";
 import MachineDetailPage from "./pages/machines/MachineDetailPage";
+import AddMachinePage from "./pages/machines/AddMachinePage";
 import MaintenancePage from "./pages/maintenance/MaintenancePage";
 import MaintenanceTasksPage from "./pages/maintenance/MaintenanceTasksPage";
 import MaintenanceSchedulesPage from "./pages/maintenance/MaintenanceSchedulesPage";
@@ -42,6 +43,7 @@ const App = () => (
               <Route element={<AppLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/machines" element={<MachinesPage />} />
+                <Route path="/machines/add" element={<AddMachinePage />} />
                 <Route path="/machines/:id" element={<MachineDetailPage />} />
                 <Route path="/maintenance" element={<MaintenancePage />} />
                 <Route path="/maintenance/tasks" element={<MaintenanceTasksPage />} />

@@ -229,7 +229,7 @@ export const MachinesPage = () => {
           </p>
         </div>
         
-        <Button onClick={() => toast.info('Add machine form would open here')}>
+        <Button onClick={() => navigate('/machines/add')}>
           <Plus className="mr-2 h-4 w-4" /> Add Machine
         </Button>
       </div>
