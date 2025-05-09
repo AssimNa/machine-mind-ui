@@ -1,13 +1,37 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Package, Search, FilterX, ChevronDown, AlertCircle } from 'lucide-react';
+import { Package, Search, FilterX, ChevronDown, AlertCircle, Plus, Pencil, Trash } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
+import { useNavigate } from 'react-router-dom';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from 'sonner';
 
 const InventoryPage = () => {
+  const navigate = useNavigate();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [partToDelete, setPartToDelete] = useState<number | null>(null);
+  
   const parts = [
     {
       id: 1,
@@ -83,12 +107,29 @@ const InventoryPage = () => {
     return { color: 'bg-green-500', status: 'Good' };
   };
 
+  const handleEditPart = (id: number) => {
+    navigate(`/inventory/edit/${id}`);
+  };
+
+  const handleDeletePart = (id: number) => {
+    setPartToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (partToDelete) {
+      toast.success("Part deleted successfully");
+      setDeleteDialogOpen(false);
+      setPartToDelete(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Parts Inventory</h1>
-        <Button>
-          <Package className="mr-2 h-4 w-4" />
+        <Button onClick={() => navigate('/inventory/add')}>
+          <Plus className="mr-2 h-4 w-4" />
           Add Part
         </Button>
       </div>
@@ -159,7 +200,7 @@ const InventoryPage = () => {
           <Card>
             <CardContent className="p-0">
               <div className="rounded-md border">
-                <div className="grid grid-cols-8 border-b bg-muted/50 p-4 text-sm font-medium">
+                <div className="grid grid-cols-9 border-b bg-muted/50 p-4 text-sm font-medium">
                   <div className="col-span-2">Part Name</div>
                   <div>SKU</div>
                   <div>Category</div>
@@ -167,12 +208,13 @@ const InventoryPage = () => {
                   <div>Location</div>
                   <div>Last Restock</div>
                   <div>Price</div>
+                  <div>Actions</div>
                 </div>
                 <div className="divide-y">
                   {parts.map((part) => {
                     const stockLevel = getStockLevel(part.inStock, part.minStock);
                     return (
-                      <div key={part.id} className="grid grid-cols-8 p-4 text-sm items-center hover:bg-muted/50 cursor-pointer">
+                      <div key={part.id} className="grid grid-cols-9 p-4 text-sm items-center hover:bg-muted/50">
                         <div className="col-span-2 font-medium">{part.name}</div>
                         <div>{part.sku}</div>
                         <div>
@@ -193,6 +235,27 @@ const InventoryPage = () => {
                         <div>{part.location}</div>
                         <div>{part.lastRestock}</div>
                         <div>{part.price}</div>
+                        <div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <ChevronDown className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleEditPart(part.id)}>
+                                <Pencil className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleDeletePart(part.id)} className="text-destructive">
+                                <Trash className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </div>
                     );
                   })}
@@ -216,6 +279,24 @@ const InventoryPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this part from the inventory.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

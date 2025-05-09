@@ -1,11 +1,14 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { FileText, Download, Clock, Calendar } from 'lucide-react';
 
 const ReportsPage = () => {
+  const navigate = useNavigate();
+  
   const reports = [
     {
       id: 1,
@@ -64,7 +67,7 @@ const ReportsPage = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
-        <Button>
+        <Button onClick={() => navigate('/reports/generate')}>
           <FileText className="mr-2 h-4 w-4" />
           Generate Report
         </Button>

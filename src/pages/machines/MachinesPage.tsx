@@ -14,6 +14,8 @@ import {
   ChevronRight,
   MoreHorizontal,
   Wrench,
+  Pencil,
+  Trash,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -25,6 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -35,6 +38,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 
@@ -148,6 +161,8 @@ export const MachinesPage = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState('all');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [machineToDelete, setMachineToDelete] = useState<number | null>(null);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -218,6 +233,25 @@ export const MachinesPage = () => {
     
     return true;
   });
+
+  const handleEditMachine = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/machines/${id}/edit`);
+  };
+
+  const handleDeleteMachine = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMachineToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (machineToDelete) {
+      toast.success("Machine deleted successfully");
+      setDeleteDialogOpen(false);
+      setMachineToDelete(null);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -396,12 +430,29 @@ export const MachinesPage = () => {
                       <span className="text-xs text-muted-foreground">
                         {machine.type} • Uptime {machine.uptime}
                       </span>
-                      <Button variant="ghost" size="icon" onClick={(e) => {
-                        e.stopPropagation();
-                        toast.info('Machine actions would open here');
-                      }}>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={(e) => handleEditMachine(machine.id, e)}>
+                            <Pencil className="mr-2 h-4 w-4" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={(e) => handleDeleteMachine(machine.id, e)} className="text-destructive">
+                            <Trash className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
                 </CardContent>
@@ -465,6 +516,24 @@ export const MachinesPage = () => {
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this machine from the system.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
