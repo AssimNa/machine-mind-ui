@@ -5,7 +5,6 @@ import {
   Bell, 
   Moon, 
   Sun, 
-  Search, 
   Menu,
   X, 
   User, 
@@ -13,7 +12,7 @@ import {
   LogOut 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { SearchCommand } from '@/components/SearchCommand';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -54,13 +53,7 @@ export const Header = () => {
         </div>
         
         <div className="hidden lg:flex lg:flex-1 max-w-md">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              className="pl-10" 
-              placeholder="Search machines, tasks, parts..." 
-            />
-          </div>
+          <SearchCommand />
         </div>
         
         <div className="flex items-center gap-4">
