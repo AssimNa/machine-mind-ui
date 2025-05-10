@@ -47,14 +47,16 @@ const formSchema = z.object({
   scheduledDate: z.date({
     required_error: "Please select a date",
   }),
-  estimatedHours: z.string().transform(val => parseFloat(val)),
+  estimatedHours: z.coerce.number().positive(),
   description: z.string().optional(),
   partsNeeded: z.string().optional(),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 const CreateTaskPage = () => {
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -62,7 +64,7 @@ const CreateTaskPage = () => {
       priority: '',
       taskType: '',
       assignedTo: '',
-      estimatedHours: '1',
+      estimatedHours: 1,
       description: '',
       partsNeeded: '',
     },

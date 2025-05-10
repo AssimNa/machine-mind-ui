@@ -38,24 +38,26 @@ const formSchema = z.object({
   name: z.string().min(3, { message: "Part name is required" }),
   sku: z.string().min(3, { message: "SKU is required" }),
   category: z.string().min(1, { message: "Please select a category" }),
-  inStock: z.string().transform(val => parseInt(val, 10)),
-  minStock: z.string().transform(val => parseInt(val, 10)),
+  inStock: z.coerce.number().nonnegative().int(),
+  minStock: z.coerce.number().nonnegative().int(),
   location: z.string().min(3, { message: "Location is required" }),
   price: z.string().min(1, { message: "Price is required" }),
   supplier: z.string().optional(),
   description: z.string().optional(),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 const AddPartPage = () => {
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       sku: '',
       category: '',
-      inStock: '0',
-      minStock: '0',
+      inStock: 0,
+      minStock: 0,
       location: '',
       price: '',
       supplier: '',
@@ -63,7 +65,7 @@ const AddPartPage = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: FormValues) => {
     console.log(values);
     toast.success("Part added successfully", {
       description: `${values.name} has been added to inventory`,

@@ -41,8 +41,8 @@ const parts = [
     name: 'Bearing Assembly',
     sku: 'BRG-1001',
     category: 'Mechanical',
-    inStock: "24",
-    minStock: "10",
+    inStock: 24,
+    minStock: 10,
     location: 'Warehouse A, Shelf 3',
     price: '42.99',
     supplier: 'BearingCo Inc.',
@@ -53,8 +53,8 @@ const parts = [
     name: 'Hydraulic Pump',
     sku: 'HYD-2023',
     category: 'Hydraulics',
-    inStock: "5",
-    minStock: "8",
+    inStock: 5,
+    minStock: 8,
     location: 'Warehouse B, Shelf 2',
     price: '289.50',
     supplier: 'FluidTech Systems',
@@ -66,13 +66,15 @@ const formSchema = z.object({
   name: z.string().min(3, { message: "Part name is required" }),
   sku: z.string().min(3, { message: "SKU is required" }),
   category: z.string().min(1, { message: "Please select a category" }),
-  inStock: z.string().transform(val => parseInt(val, 10)),
-  minStock: z.string().transform(val => parseInt(val, 10)),
+  inStock: z.coerce.number().nonnegative().int(),
+  minStock: z.coerce.number().nonnegative().int(),
   location: z.string().min(3, { message: "Location is required" }),
   price: z.string().min(1, { message: "Price is required" }),
   supplier: z.string().optional(),
   description: z.string().optional(),
 });
+
+type FormValues = z.infer<typeof formSchema>;
 
 const EditPartPage = () => {
   const navigate = useNavigate();
@@ -81,14 +83,14 @@ const EditPartPage = () => {
   // Find part with the matching ID
   const part = parts.find(p => p.id === id);
   
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: part?.name || '',
       sku: part?.sku || '',
       category: part?.category || '',
-      inStock: part?.inStock || '0',
-      minStock: part?.minStock || '0',
+      inStock: part?.inStock || 0,
+      minStock: part?.minStock || 0,
       location: part?.location || '',
       price: part?.price || '',
       supplier: part?.supplier || '',
@@ -108,7 +110,7 @@ const EditPartPage = () => {
     );
   }
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: FormValues) => {
     console.log(values);
     toast.success("Part updated successfully", {
       description: `${values.name} has been updated`,
