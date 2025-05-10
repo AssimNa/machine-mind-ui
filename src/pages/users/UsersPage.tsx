@@ -5,8 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Users, UserPlus, Search, FilterX, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
 
 const UsersPage = () => {
+  const navigate = useNavigate();
+  
   const users = [
     {
       id: 1,
@@ -76,7 +79,7 @@ const UsersPage = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
-        <Button>
+        <Button onClick={() => navigate('/users/add')}>
           <UserPlus className="mr-2 h-4 w-4" />
           Add User
         </Button>

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +17,7 @@ import MaintenancePage from "./pages/maintenance/MaintenancePage";
 import MaintenanceTasksPage from "./pages/maintenance/MaintenanceTasksPage";
 import MaintenanceSchedulesPage from "./pages/maintenance/MaintenanceSchedulesPage";
 import CreateTaskPage from "./pages/maintenance/CreateTaskPage";
+import CreateSchedulePage from "./pages/maintenance/CreateSchedulePage";
 import InventoryPage from "./pages/inventory/InventoryPage";
 import AddPartPage from "./pages/inventory/AddPartPage";
 import EditPartPage from "./pages/inventory/EditPartPage";
@@ -24,6 +26,7 @@ import GenerateReportPage from "./pages/reports/GenerateReportPage";
 import AlertsPage from "./pages/alerts/AlertsPage";
 import AnalyticsPage from "./pages/analytics/AnalyticsPage";
 import UsersPage from "./pages/users/UsersPage";
+import AddUserPage from "./pages/users/AddUserPage";
 import SettingsPage from "./pages/settings/SettingsPage";
 import HelpPage from "./pages/help/HelpPage";
 import ProfilePage from "./pages/profile/ProfilePage";
@@ -58,6 +61,7 @@ const App = () => (
                 <Route path="/maintenance/tasks" element={<MaintenanceTasksPage />} />
                 <Route path="/maintenance/tasks/create" element={<CreateTaskPage />} />
                 <Route path="/maintenance/schedules" element={<MaintenanceSchedulesPage />} />
+                <Route path="/maintenance/schedules/create" element={<CreateSchedulePage />} />
                 
                 {/* Inventory routes */}
                 <Route path="/inventory" element={<InventoryPage />} />
@@ -72,6 +76,7 @@ const App = () => (
                 <Route path="/alerts" element={<AlertsPage />} />
                 <Route path="/analytics" element={<AnalyticsPage />} />
                 <Route path="/users" element={<UsersPage />} />
+                <Route path="/users/add" element={<AddUserPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/help" element={<HelpPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
