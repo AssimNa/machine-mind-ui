@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { LoginPage } from "@/pages/auth/LoginPage";
+import { SignupPage } from "@/pages/auth/SignupPage"; 
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
 import { MachinesPage } from "@/pages/machines/MachinesPage";
 import MachineDetailPage from "./pages/machines/MachineDetailPage";
@@ -45,6 +46,7 @@ const App = () => (
             <Routes>
               {/* Public routes */}
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
               
               {/* Protected routes */}
               <Route element={<AppLayout />}>

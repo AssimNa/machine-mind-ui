@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
 
@@ -15,6 +14,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  register: (name: string, email: string, password: string) => Promise<void>;
   checkAuth: () => Promise<boolean>;
 };
 
@@ -103,6 +103,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const register = async (name: string, email: string, password: string) => {
+    try {
+      setIsLoading(true);
+      
+      // In a real app, you would send a request to your API
+      // const response = await axios.post('/api/auth/register', { name, email, password });
+      
+      // For demo purposes, we'll simulate a successful registration
+      // In a real application, we'd wait for backend confirmation
+      
+      // Simulating some delay for the registration process
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      toast.success('Registration successful! You can now log in.');
+      
+      // We don't auto login the user after registration in this flow
+      // They need to log in explicitly with their new credentials
+    } catch (error) {
+      console.error('Registration failed:', error);
+      toast.error('Registration failed. Please try again.');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user');
@@ -118,6 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAuthenticated, 
       login, 
       logout,
+      register,
       checkAuth
     }}>
       {children}

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate, Link } from 'react-router-dom';
-import { Wrench, Loader2 } from 'lucide-react';
+import { Wrench, Loader2, UserPlus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -26,32 +26,40 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
-const loginSchema = z.object({
+const signupSchema = z.object({
+  name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
   email: z.string().email({ message: 'Please enter a valid email address' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
+  confirmPassword: z.string().min(6, { message: 'Confirm password must be at least 6 characters' }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type SignupFormValues = z.infer<typeof signupSchema>;
 
-export const LoginPage = () => {
-  const { login } = useAuth();
+export const SignupPage = () => {
+  const { register } = useAuth();
   const navigate = useNavigate();
   
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
+      name: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: SignupFormValues) => {
     try {
-      await login(data.email, data.password);
-      navigate('/');
+      await register(data.name, data.email, data.password);
+      toast.success('Account created successfully!');
+      navigate('/login');
     } catch (error) {
-      console.error('Login error:', error);
-      // Error is already handled in the auth context
+      console.error('Registration error:', error);
+      toast.error('Failed to create account. Please try again.');
     }
   };
 
@@ -66,15 +74,33 @@ export const LoginPage = () => {
         
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to access your account
+              Enter your information to create a new account
             </CardDescription>
           </CardHeader>
           
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter your name" 
+                          type="text" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="email"
@@ -101,7 +127,7 @@ export const LoginPage = () => {
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="Enter your password" 
+                          placeholder="Create a password" 
                           type="password" 
                           {...field} 
                         />
@@ -111,39 +137,42 @@ export const LoginPage = () => {
                   )}
                 />
                 
-                <div className="text-right">
-                  <Button 
-                    variant="link" 
-                    className="p-0 h-auto font-normal text-sm"
-                    onClick={() => toast.info('Password reset functionality would be implemented in a real app')}
-                    type="button"
-                  >
-                    Forgot password?
-                  </Button>
-                </div>
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Confirm your password" 
+                          type="password" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 
                 <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting && (
+                  {form.formState.isSubmitting ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <UserPlus className="mr-2 h-4 w-4" />
                   )}
-                  Sign in
+                  Sign up
                 </Button>
               </form>
             </Form>
           </CardContent>
           
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter>
             <div className="text-center text-sm text-muted-foreground w-full">
-              Don't have an account?{" "}
-              <Link to="/signup" className="text-primary underline hover:text-primary/80">
-                Sign up
+              Already have an account?{" "}
+              <Link to="/login" className="text-primary underline hover:text-primary/80">
+                Sign in
               </Link>
-            </div>
-            <div className="text-center text-sm text-muted-foreground w-full">
-              <p>Demo login credentials:</p>
-              <p className="mt-1">admin@example.com / password</p>
-              <p>tech@example.com / password</p>
-              <p>viewer@example.com / password</p>
             </div>
           </CardFooter>
         </Card>
@@ -151,3 +180,5 @@ export const LoginPage = () => {
     </div>
   );
 };
+
+export default SignupPage;
