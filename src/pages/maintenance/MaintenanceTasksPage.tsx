@@ -10,6 +10,10 @@ import { useNavigate } from 'react-router-dom';
 const MaintenanceTasksPage = () => {
   const navigate = useNavigate();
   
+  const handleCreateTask = () => {
+    navigate('/maintenance/tasks/create');
+  };
+  
   const tasks = [
     {
       id: 1,
@@ -80,7 +84,7 @@ const MaintenanceTasksPage = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Maintenance Tasks</h1>
-        <Button>
+        <Button onClick={handleCreateTask}>
           <Wrench className="mr-2 h-4 w-4" />
           Create Task
         </Button>

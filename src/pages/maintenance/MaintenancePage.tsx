@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 const MaintenancePage = () => {
   const navigate = useNavigate();
 
-  // Fix button handlers to use correct routes
   const handleCreateTask = () => {
     navigate('/maintenance/tasks/create');
   };
