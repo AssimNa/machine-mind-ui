@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,8 @@ import { Calendar, Clock, Search, FilterX, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 const MaintenanceSchedulesPage = () => {
+  const navigate = useNavigate();
+  
   const schedules = [
     {
       id: 1,
@@ -70,7 +72,7 @@ const MaintenanceSchedulesPage = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Maintenance Schedules</h1>
-        <Button>
+        <Button onClick={() => navigate('/maintenance/schedules/create')}>
           <Calendar className="mr-2 h-4 w-4" />
           Create Schedule
         </Button>
