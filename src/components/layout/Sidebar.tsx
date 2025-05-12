@@ -27,6 +27,21 @@ import {
 } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 
+// Define proper TypeScript interfaces for the menu items
+interface SubMenuItem {
+  title: string;
+  href: string;
+  roles: string[];
+}
+
+interface MenuItem {
+  title: string;
+  href: string;
+  icon: React.ReactNode;
+  roles: string[];
+  subItems?: SubMenuItem[];
+}
+
 export const Sidebar = () => {
   const { user } = useAuth();
   const location = useLocation();
@@ -36,7 +51,7 @@ export const Sidebar = () => {
   const isViewer = user?.role === 'viewer';
   
   // Common menu items for all users
-  const commonMenuItems = [
+  const commonMenuItems: MenuItem[] = [
     {
       title: 'Dashboard',
       href: '/dashboard',
@@ -70,7 +85,7 @@ export const Sidebar = () => {
   ];
 
   // Technician specific menu items
-  const technicianMenuItems = [
+  const technicianMenuItems: MenuItem[] = [
     {
       title: 'My Tasks',
       href: '/maintenance/tasks',
@@ -98,7 +113,7 @@ export const Sidebar = () => {
   ];
 
   // Admin specific menu items
-  const adminMenuItems = [
+  const adminMenuItems: MenuItem[] = [
     {
       title: 'Maintenance',
       href: '/maintenance',
