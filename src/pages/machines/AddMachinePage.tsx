@@ -8,14 +8,11 @@ import { toast } from 'sonner';
 import { 
   ChevronLeft, 
   Save,
-  Factory,
-  Calendar,
-  MapPin,
-  Building2,
   Tag,
-  Info,
-  Barcode,
-  Wrench,
+  FileText,
+  Hash,
+  Package,
+  Weight,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -31,13 +28,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   Card,
   CardContent,
   CardDescription,
@@ -47,30 +37,28 @@ import {
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Machine name is required' }),
-  model: z.string().min(1, { message: 'Model number is required' }),
-  serialNumber: z.string().optional(),
-  type: z.string().min(1, { message: 'Machine type is required' }),
-  manufacturer: z.string().optional(),
-  purchaseDate: z.string().optional(),
-  department: z.string().min(1, { message: 'Department is required' }),
-  location: z.string().min(1, { message: 'Location is required' }),
+  nIdentification: z.string().min(1, { message: 'N° Identification is required' }),
+  designation: z.string().min(1, { message: 'Designation is required' }),
+  nSerie: z.string().optional(),
+  constructeur: z.string().optional(),
+  nFicheMachine: z.string().optional(),
+  poids: z.string().optional(),
+  dimensions: z.string().optional(),
   description: z.string().optional(),
-  maintenanceFrequency: z.string().optional(),
 });
 
 type MachineFormValues = z.infer<typeof formSchema>;
 
 const defaultValues: Partial<MachineFormValues> = {
   name: '',
-  model: '',
-  serialNumber: '',
-  type: '',
-  manufacturer: '',
-  purchaseDate: '',
-  department: '',
-  location: '',
+  nIdentification: '',
+  designation: '',
+  nSerie: '',
+  constructeur: '',
+  nFicheMachine: '',
+  poids: '',
+  dimensions: '',
   description: '',
-  maintenanceFrequency: 'monthly',
 };
 
 const AddMachinePage = () => {
@@ -132,9 +120,23 @@ const AddMachinePage = () => {
                     <FormItem>
                       <FormLabel>Machine Name*</FormLabel>
                       <FormControl>
+                        <Input placeholder="Machine name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="nIdentification"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>N° Identification*</FormLabel>
+                      <FormControl>
                         <div className="relative">
-                          <Factory className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                          <Input className="pl-10" placeholder="CNC Machine #1" {...field} />
+                          <Hash className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input className="pl-10" placeholder="ID-123" {...field} />
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -144,14 +146,14 @@ const AddMachinePage = () => {
 
                 <FormField
                   control={form.control}
-                  name="model"
+                  name="designation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Model Number*</FormLabel>
+                      <FormLabel>Designation*</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Tag className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                          <Input className="pl-10" placeholder="MDL-2000" {...field} />
+                          <Input className="pl-10" placeholder="Production Equipment" {...field} />
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -161,17 +163,16 @@ const AddMachinePage = () => {
 
                 <FormField
                   control={form.control}
-                  name="serialNumber"
+                  name="nSerie"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Serial Number</FormLabel>
+                      <FormLabel>N° Serie</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Barcode className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                          <Input className="pl-10" placeholder="SN12345678" {...field} />
+                          <Tag className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input className="pl-10" placeholder="SN-12345" {...field} />
                         </div>
                       </FormControl>
-                      <FormDescription>Optional identifier for this specific unit</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -179,55 +180,14 @@ const AddMachinePage = () => {
 
                 <FormField
                   control={form.control}
-                  name="type"
+                  name="constructeur"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Machine Type*</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select machine type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="cnc">CNC</SelectItem>
-                          <SelectItem value="assembly">Assembly</SelectItem>
-                          <SelectItem value="robot">Robot</SelectItem>
-                          <SelectItem value="packaging">Packaging</SelectItem>
-                          <SelectItem value="molding">Molding</SelectItem>
-                          <SelectItem value="painting">Painting</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="manufacturer"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Manufacturer</FormLabel>
-                      <FormControl>
-                        <Input placeholder="ABB, Haas, etc." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="purchaseDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Purchase Date</FormLabel>
+                      <FormLabel>Constructeur</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                          <Input className="pl-10" type="date" {...field} />
+                          <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input className="pl-10" placeholder="Manufacturer name" {...field} />
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -237,14 +197,14 @@ const AddMachinePage = () => {
 
                 <FormField
                   control={form.control}
-                  name="department"
+                  name="nFicheMachine"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Department*</FormLabel>
+                      <FormLabel>N° Fiche Machine</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Building2 className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                          <Input className="pl-10" placeholder="Production, Assembly, etc." {...field} />
+                          <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input className="pl-10" placeholder="FM-123" {...field} />
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -254,49 +214,33 @@ const AddMachinePage = () => {
 
                 <FormField
                   control={form.control}
-                  name="location"
+                  name="poids"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Location*</FormLabel>
+                      <FormLabel>Poids</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                          <Input className="pl-10" placeholder="Floor 1, Bay A" {...field} />
+                          <Weight className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input className="pl-10" placeholder="1200 kg" {...field} />
                         </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
-                  name="maintenanceFrequency"
+                  name="dimensions"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Maintenance Frequency</FormLabel>
-                      <Select 
-                        onValueChange={field.onChange} 
-                        defaultValue={field.value || "monthly"}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <div className="flex items-center gap-2">
-                              <Wrench className="h-4 w-4 text-muted-foreground" />
-                              <SelectValue placeholder="Select frequency" />
-                            </div>
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="weekly">Weekly</SelectItem>
-                          <SelectItem value="biweekly">Biweekly</SelectItem>
-                          <SelectItem value="monthly">Monthly</SelectItem>
-                          <SelectItem value="quarterly">Quarterly</SelectItem>
-                          <SelectItem value="biannually">Biannually</SelectItem>
-                          <SelectItem value="annually">Annually</SelectItem>
-                          <SelectItem value="custom">Custom</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>Dimensions</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Package className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input className="pl-10" placeholder="2.5m x 1.8m x 1.2m" {...field} />
+                        </div>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -310,14 +254,11 @@ const AddMachinePage = () => {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Info className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Textarea 
-                          className="min-h-32 pl-10" 
-                          placeholder="Additional details about the machine..."
-                          {...field}
-                        />
-                      </div>
+                      <Textarea 
+                        className="min-h-32" 
+                        placeholder="Additional details about the machine..."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
