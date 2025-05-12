@@ -1,96 +1,64 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { 
-  Wrench, 
-  Search, 
-  FilterX, 
-  ChevronDown, 
-  ClipboardList,
-  History
-} from 'lucide-react';
+import { Wrench, Search, FilterX, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
 
 const MaintenanceTasksPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const isTechnician = user?.role === 'technician';
-  const [activeTab, setActiveTab] = useState('all');
   
   const handleCreateTask = () => {
     navigate('/maintenance/tasks/create');
-  };
-
-  const handleViewHistory = (machineId: number) => {
-    toast.info(`Viewing history for machine #${machineId}`);
-    // In a real app, this would navigate to the machine's history page
-  };
-
-  const handleLogIntervention = (taskId: number) => {
-    toast.success(`Recording intervention for task #${taskId}`);
-    // In a real app, this would open an intervention form for the specific task
   };
   
   const tasks = [
     {
       id: 1,
-      title: 'Replace bearings',
-      machine: 'Machine #A2301',
-      designation: 'Production Line Conveyor',
-      nIdentification: 'ID-PL-2301',
+      title: 'Replace bearings on Machine 3',
+      machine: 'Production Line 3',
       priority: 'High',
       status: 'In Progress',
       assignedTo: 'Michael Johnson',
-      dueDate: '2025-05-15'
+      dueDate: '2024-05-15'
     },
     {
       id: 2,
       title: 'Lubricate conveyor system',
-      machine: 'Machine #B4502',
-      designation: 'Conveyor System',
-      nIdentification: 'ID-CV-4502',
+      machine: 'Conveyor A',
       priority: 'Medium',
       status: 'Pending',
       assignedTo: 'Sarah Williams',
-      dueDate: '2025-05-18'
+      dueDate: '2024-05-18'
     },
     {
       id: 3,
       title: 'Check hydraulic fluid levels',
-      machine: 'Machine #C7801',
-      designation: 'Hydraulic Press',
-      nIdentification: 'ID-HP-7801',
+      machine: 'Hydraulic Press 2',
       priority: 'Low',
       status: 'Completed',
       assignedTo: 'John Smith',
-      dueDate: '2025-05-10'
+      dueDate: '2024-05-10'
     },
     {
       id: 4,
       title: 'Calibrate sensors',
-      machine: 'Machine #D9234',
-      designation: 'Assembly Station',
-      nIdentification: 'ID-AS-9234',
+      machine: 'Assembly Station 5',
       priority: 'Medium',
       status: 'Pending',
       assignedTo: 'Emma Davis',
-      dueDate: '2025-05-20'
+      dueDate: '2024-05-20'
     },
     {
       id: 5,
       title: 'Replace air filters',
-      machine: 'Machine #E1567',
-      designation: 'HVAC System',
-      nIdentification: 'ID-HV-1567',
+      machine: 'HVAC System',
       priority: 'Low',
       status: 'In Progress',
       assignedTo: 'Michael Johnson',
-      dueDate: '2025-05-16'
+      dueDate: '2024-05-16'
     }
   ];
 
@@ -112,31 +80,14 @@ const MaintenanceTasksPage = () => {
     }
   };
 
-  const filteredTasks = activeTab === 'all' 
-    ? tasks 
-    : tasks.filter(task => task.status.toLowerCase().replace(' ', '') === activeTab);
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">
-          {isTechnician ? 'My Assigned Tasks' : 'Maintenance Tasks'}
-        </h1>
-        {(user?.role === 'admin' || user?.role === 'technician') && (
-          <Button onClick={handleCreateTask}>
-            {isTechnician ? (
-              <>
-                <ClipboardList className="mr-2 h-4 w-4" />
-                Log Intervention
-              </>
-            ) : (
-              <>
-                <Wrench className="mr-2 h-4 w-4" />
-                Create Task
-              </>
-            )}
-          </Button>
-        )}
+        <h1 className="text-3xl font-bold tracking-tight">Maintenance Tasks</h1>
+        <Button onClick={handleCreateTask}>
+          <Wrench className="mr-2 h-4 w-4" />
+          Create Task
+        </Button>
       </div>
 
       <div className="flex flex-col md:flex-row gap-4">
@@ -154,32 +105,30 @@ const MaintenanceTasksPage = () => {
         </Button>
       </div>
 
-      <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
+      <Tabs defaultValue="all">
         <TabsList>
           <TabsTrigger value="all">All Tasks</TabsTrigger>
           <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="inprogress">In Progress</TabsTrigger>
+          <TabsTrigger value="inProgress">In Progress</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
         </TabsList>
-        <TabsContent value={activeTab} className="space-y-4 mt-4">
+        <TabsContent value="all" className="space-y-4 mt-4">
           <Card>
             <CardContent className="p-0">
               <div className="rounded-md border">
                 <div className="grid grid-cols-8 border-b bg-muted/50 p-4 text-sm font-medium">
-                  <div className="col-span-2">Task</div>
+                  <div className="col-span-3">Task</div>
                   <div>Machine</div>
-                  <div>Designation</div>
                   <div>Priority</div>
                   <div>Status</div>
+                  <div>Assigned To</div>
                   <div>Due Date</div>
-                  <div>Actions</div>
                 </div>
                 <div className="divide-y">
-                  {filteredTasks.map((task) => (
-                    <div key={task.id} className="grid grid-cols-8 p-4 text-sm items-center hover:bg-muted/50">
-                      <div className="col-span-2 font-medium">{task.title}</div>
+                  {tasks.map((task) => (
+                    <div key={task.id} className="grid grid-cols-8 p-4 text-sm items-center hover:bg-muted/50 cursor-pointer">
+                      <div className="col-span-3 font-medium">{task.title}</div>
                       <div>{task.machine}</div>
-                      <div>{task.designation}</div>
                       <div>
                         <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${getPriorityClass(task.priority)}`}>
                           {task.priority}
@@ -190,29 +139,33 @@ const MaintenanceTasksPage = () => {
                           {task.status}
                         </span>
                       </div>
+                      <div>{task.assignedTo}</div>
                       <div>{task.dueDate}</div>
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewHistory(task.id)}
-                        >
-                          <History className="h-4 w-4" />
-                        </Button>
-                        {isTechnician && (task.status !== 'Completed') && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleLogIntervention(task.id)}
-                          >
-                            <ClipboardList className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
                     </div>
                   ))}
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="pending" className="space-y-4 mt-4">
+          <Card>
+            <CardContent className="pt-6">
+              <p>Pending tasks will be displayed here.</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="inProgress" className="space-y-4 mt-4">
+          <Card>
+            <CardContent className="pt-6">
+              <p>In-progress tasks will be displayed here.</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="completed" className="space-y-4 mt-4">
+          <Card>
+            <CardContent className="pt-6">
+              <p>Completed tasks will be displayed here.</p>
             </CardContent>
           </Card>
         </TabsContent>
