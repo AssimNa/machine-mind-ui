@@ -175,20 +175,7 @@ const InventoryPage = () => {
         </Card>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search parts..." className="pl-8" />
-        </div>
-        <Button variant="outline" className="w-full md:w-auto">
-          Filter
-          <ChevronDown className="ml-2 h-4 w-4" />
-        </Button>
-        <Button variant="outline" className="w-full md:w-auto">
-          <FilterX className="mr-2 h-4 w-4" />
-          Clear Filters
-        </Button>
-      </div>
+      
 
       <Tabs defaultValue="all">
         <TabsList>

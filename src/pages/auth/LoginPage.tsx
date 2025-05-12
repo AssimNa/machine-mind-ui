@@ -139,12 +139,7 @@ export const LoginPage = () => {
                 Sign up
               </Link>
             </div>
-            <div className="text-center text-sm text-muted-foreground w-full">
-              <p>Demo login credentials:</p>
-              <p className="mt-1">admin@example.com / password</p>
-              <p>tech@example.com / password</p>
-              <p>viewer@example.com / password</p>
-            </div>
+            
           </CardFooter>
         </Card>
       </div>

@@ -45,13 +45,7 @@ const HelpPage = () => {
         <h1 className="text-3xl font-bold tracking-tight">Help Center</h1>
       </div>
       
-      <div className="relative max-w-2xl mx-auto">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input 
-          placeholder="Search for help topics..." 
-          className="pl-8 w-full"
-        />
-      </div>
+    
 
       <Tabs defaultValue="faq" className="max-w-4xl mx-auto">
         <TabsList className="grid w-full grid-cols-3">
