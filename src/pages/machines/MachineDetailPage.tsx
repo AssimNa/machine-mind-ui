@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Wrench, Calendar, FileText, AlertCircle, Package } from 'lucide-react';
+import { Wrench, Calendar, FileText, AlertCircle, Package, Hash, Tag, Weight } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 const MachineDetailPage = () => {
@@ -13,11 +13,13 @@ const MachineDetailPage = () => {
   const machine = {
     id,
     name: `Machine ${id}`,
-    type: 'Production Line',
-    model: 'XYZ-2000',
-    manufacturer: 'Industrial Equipment Co.',
-    purchaseDate: '2022-03-15',
-    location: 'Building A, Floor 2',
+    nIdentification: `ID-${id}`,
+    designation: 'Production Equipment',
+    nSerie: `SN-${id}000`,
+    constructeur: 'Industrial Equipment Co.',
+    nFicheMachine: `FM-${id}`,
+    poids: '1200 kg',
+    dimensions: '2.5m x 1.8m x 1.2m',
     status: 'Operational',
     healthScore: 85,
     lastMaintenance: '2023-12-05',
@@ -47,24 +49,46 @@ const MachineDetailPage = () => {
           <CardContent>
             <dl className="grid grid-cols-2 gap-4">
               <div>
-                <dt className="text-sm font-medium text-muted-foreground">Type</dt>
-                <dd className="text-sm font-semibold">{machine.type}</dd>
+                <dt className="text-sm font-medium text-muted-foreground">
+                  <Hash className="inline h-4 w-4 mr-1" /> N° Identification
+                </dt>
+                <dd className="text-sm font-semibold">{machine.nIdentification}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-muted-foreground">Model</dt>
-                <dd className="text-sm font-semibold">{machine.model}</dd>
+                <dt className="text-sm font-medium text-muted-foreground">
+                  <Tag className="inline h-4 w-4 mr-1" /> Designation
+                </dt>
+                <dd className="text-sm font-semibold">{machine.designation}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-muted-foreground">Manufacturer</dt>
-                <dd className="text-sm font-semibold">{machine.manufacturer}</dd>
+                <dt className="text-sm font-medium text-muted-foreground">
+                  <Tag className="inline h-4 w-4 mr-1" /> N° Serie
+                </dt>
+                <dd className="text-sm font-semibold">{machine.nSerie}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-muted-foreground">Purchase Date</dt>
-                <dd className="text-sm font-semibold">{machine.purchaseDate}</dd>
+                <dt className="text-sm font-medium text-muted-foreground">
+                  <FileText className="inline h-4 w-4 mr-1" /> Constructeur
+                </dt>
+                <dd className="text-sm font-semibold">{machine.constructeur}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-muted-foreground">Location</dt>
-                <dd className="text-sm font-semibold">{machine.location}</dd>
+                <dt className="text-sm font-medium text-muted-foreground">
+                  <FileText className="inline h-4 w-4 mr-1" /> N° Fiche Machine
+                </dt>
+                <dd className="text-sm font-semibold">{machine.nFicheMachine}</dd>
+              </div>
+              <div>
+                <dt className="text-sm font-medium text-muted-foreground">
+                  <Weight className="inline h-4 w-4 mr-1" /> Poids
+                </dt>
+                <dd className="text-sm font-semibold">{machine.poids}</dd>
+              </div>
+              <div>
+                <dt className="text-sm font-medium text-muted-foreground">
+                  <Package className="inline h-4 w-4 mr-1" /> Dimensions
+                </dt>
+                <dd className="text-sm font-semibold">{machine.dimensions}</dd>
               </div>
             </dl>
           </CardContent>

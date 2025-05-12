@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Hash, Tag, FileText, Weight, Package } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -19,13 +19,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   Card,
   CardContent,
   CardDescription,
@@ -38,41 +31,35 @@ import { toast } from 'sonner';
 const machineData = {
   '1': {
     name: 'CNC Machine #1',
-    type: 'CNC',
-    model: 'Haas VF-2',
-    manufacturer: 'Haas Automation',
-    serialNumber: '1234-5678-90',
-    purchaseDate: '2023-01-15',
-    warrantyExpiration: '2026-01-15',
-    department: 'Production',
-    location: 'Floor 1, Bay A',
-    description: 'Vertical machining center with 40x20x25" travel'
+    nIdentification: 'ID-1001',
+    designation: 'Production Equipment',
+    nSerie: 'SN-78901234',
+    constructeur: 'Haas Automation',
+    nFicheMachine: 'FM-5678',
+    poids: '1200 kg',
+    dimensions: '2.5m x 1.8m x 1.2m'
   },
   '2': {
     name: 'Assembly Line #3',
-    type: 'Assembly',
-    model: 'Custom AL-230',
-    manufacturer: 'Internal Build',
-    serialNumber: 'AL-2022-003',
-    purchaseDate: '2022-06-10',
-    warrantyExpiration: 'N/A',
-    department: 'Production',
-    location: 'Floor 1, Bay C',
-    description: 'Custom assembly line for product line B'
+    nIdentification: 'ID-1002',
+    designation: 'Assembly Equipment',
+    nSerie: 'AL-2022-003',
+    constructeur: 'Internal Build',
+    nFicheMachine: 'FM-9012',
+    poids: '3500 kg',
+    dimensions: '12m x 3m x 2.2m'
   }
 };
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  type: z.string().min(1, { message: "Please select a machine type." }),
-  model: z.string().min(1, { message: "Model is required." }),
-  manufacturer: z.string().min(1, { message: "Manufacturer is required." }),
-  serialNumber: z.string().min(1, { message: "Serial number is required." }),
-  purchaseDate: z.string().optional(),
-  warrantyExpiration: z.string().optional(),
-  department: z.string().min(1, { message: "Department is required." }),
-  location: z.string().min(1, { message: "Location is required." }),
-  description: z.string().optional(),
+  nIdentification: z.string().min(1, { message: "Identification number is required." }),
+  designation: z.string().min(1, { message: "Designation is required." }),
+  nSerie: z.string().min(1, { message: "Serial number is required." }),
+  constructeur: z.string().min(1, { message: "Manufacturer is required." }),
+  nFicheMachine: z.string().min(1, { message: "Machine sheet number is required." }),
+  poids: z.string().optional(),
+  dimensions: z.string().optional(),
 });
 
 const EditMachinePage = () => {
@@ -85,15 +72,13 @@ const EditMachinePage = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: machine?.name || '',
-      type: machine?.type || '',
-      model: machine?.model || '',
-      manufacturer: machine?.manufacturer || '',
-      serialNumber: machine?.serialNumber || '',
-      purchaseDate: machine?.purchaseDate || '',
-      warrantyExpiration: machine?.warrantyExpiration || '',
-      department: machine?.department || '',
-      location: machine?.location || '',
-      description: machine?.description || '',
+      nIdentification: machine?.nIdentification || '',
+      designation: machine?.designation || '',
+      nSerie: machine?.nSerie || '',
+      constructeur: machine?.constructeur || '',
+      nFicheMachine: machine?.nFicheMachine || '',
+      poids: machine?.poids || '',
+      dimensions: machine?.dimensions || '',
     }
   });
   
@@ -140,7 +125,7 @@ const EditMachinePage = () => {
                     <FormItem>
                       <FormLabel>Machine Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="CNC Machine #1" {...field} />
+                        <Input placeholder="Machine Name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -149,39 +134,15 @@ const EditMachinePage = () => {
                 
                 <FormField
                   control={form.control}
-                  name="type"
+                  name="nIdentification"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Machine Type</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select machine type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="CNC">CNC</SelectItem>
-                          <SelectItem value="Assembly">Assembly Line</SelectItem>
-                          <SelectItem value="Robot">Robotic Arm</SelectItem>
-                          <SelectItem value="Packaging">Packaging Unit</SelectItem>
-                          <SelectItem value="Molding">Injection Molder</SelectItem>
-                          <SelectItem value="Painting">Paint Booth</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="model"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Model</FormLabel>
+                      <FormLabel>N° Identification</FormLabel>
                       <FormControl>
-                        <Input placeholder="Model number or name" {...field} />
+                        <div className="relative">
+                          <Hash className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="ID-1001" className="pl-10" {...field} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -190,12 +151,15 @@ const EditMachinePage = () => {
                 
                 <FormField
                   control={form.control}
-                  name="manufacturer"
+                  name="designation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Manufacturer</FormLabel>
+                      <FormLabel>Designation</FormLabel>
                       <FormControl>
-                        <Input placeholder="Manufacturer name" {...field} />
+                        <div className="relative">
+                          <Tag className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="Production Equipment" className="pl-10" {...field} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -204,12 +168,15 @@ const EditMachinePage = () => {
                 
                 <FormField
                   control={form.control}
-                  name="serialNumber"
+                  name="nSerie"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Serial Number</FormLabel>
+                      <FormLabel>N° Serie</FormLabel>
                       <FormControl>
-                        <Input placeholder="Machine serial number" {...field} />
+                        <div className="relative">
+                          <Hash className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="SN-78901234" className="pl-10" {...field} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -218,12 +185,15 @@ const EditMachinePage = () => {
                 
                 <FormField
                   control={form.control}
-                  name="purchaseDate"
+                  name="constructeur"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Purchase Date</FormLabel>
+                      <FormLabel>Constructeur</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <div className="relative">
+                          <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="Manufacturer name" className="pl-10" {...field} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -232,16 +202,16 @@ const EditMachinePage = () => {
                 
                 <FormField
                   control={form.control}
-                  name="warrantyExpiration"
+                  name="nFicheMachine"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Warranty Expiration</FormLabel>
+                      <FormLabel>N° Fiche Machine</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} />
+                        <div className="relative">
+                          <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="FM-5678" className="pl-10" {...field} />
+                        </div>
                       </FormControl>
-                      <FormDescription>
-                        Leave empty if no warranty or not applicable
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -249,61 +219,38 @@ const EditMachinePage = () => {
                 
                 <FormField
                   control={form.control}
-                  name="department"
+                  name="poids"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Department</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select department" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Production">Production</SelectItem>
-                          <SelectItem value="Assembly">Assembly</SelectItem>
-                          <SelectItem value="Shipping">Shipping</SelectItem>
-                          <SelectItem value="Finishing">Finishing</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="location"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Location</FormLabel>
+                      <FormLabel>Poids</FormLabel>
                       <FormControl>
-                        <Input placeholder="Floor 1, Bay A" {...field} />
+                        <div className="relative">
+                          <Weight className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="1200 kg" className="pl-10" {...field} />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="dimensions"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Dimensions</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Package className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="2.5m x 1.8m x 1.2m" className="pl-10" {...field} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Additional details about this machine"
-                        className="min-h-[120px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               
               <div className="flex justify-end gap-3">
                 <Button 
