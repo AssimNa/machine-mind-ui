@@ -14,7 +14,10 @@ import {
   Layers,
   Activity,
   HelpCircle,
-  ChevronDown
+  ChevronDown,
+  History,
+  ClipboardList,
+  Calendar
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
@@ -29,12 +32,14 @@ export const Sidebar = () => {
   const location = useLocation();
   
   const isAdmin = user?.role === 'admin';
-  const isTechnician = user?.role === 'technician' || isAdmin;
+  const isTechnician = user?.role === 'technician';
+  const isViewer = user?.role === 'viewer';
   
-  const menuItems = [
+  // Common menu items for all users
+  const commonMenuItems = [
     {
       title: 'Dashboard',
-      href: '/',
+      href: '/dashboard',
       icon: <LayoutDashboard size={18} />,
       roles: ['admin', 'technician', 'viewer'],
     },
@@ -45,52 +50,10 @@ export const Sidebar = () => {
       roles: ['admin', 'technician', 'viewer'],
     },
     {
-      title: 'Maintenance',
-      href: '/maintenance',
-      icon: <Wrench size={18} />,
-      roles: ['admin', 'technician', 'viewer'],
-      subItems: [
-        {
-          title: 'Tasks',
-          href: '/maintenance/tasks',
-          roles: ['admin', 'technician', 'viewer'],
-        },
-        {
-          title: 'Schedules',
-          href: '/maintenance/schedules',
-          roles: ['admin', 'technician', 'viewer'],
-        }
-      ]
-    },
-    {
-      title: 'Parts Inventory',
-      href: '/inventory',
-      icon: <Package size={18} />,
-      roles: ['admin', 'technician', 'viewer'],
-    },
-    {
-      title: 'Reports',
-      href: '/reports',
-      icon: <FileText size={18} />,
-      roles: ['admin', 'technician', 'viewer'],
-    },
-    {
       title: 'Alerts',
       href: '/alerts',
       icon: <AlertCircle size={18} />,
       roles: ['admin', 'technician', 'viewer'],
-    },
-    {
-      title: 'Analytics',
-      href: '/analytics',
-      icon: <Activity size={18} />,
-      roles: ['admin'],
-    },
-    {
-      title: 'User Management',
-      href: '/users',
-      icon: <Users size={18} />,
-      roles: ['admin'],
     },
     {
       title: 'Settings',
@@ -105,6 +68,87 @@ export const Sidebar = () => {
       roles: ['admin', 'technician', 'viewer'],
     }
   ];
+
+  // Technician specific menu items
+  const technicianMenuItems = [
+    {
+      title: 'My Tasks',
+      href: '/maintenance/tasks',
+      icon: <ClipboardList size={18} />,
+      roles: ['technician'],
+    },
+    {
+      title: 'Schedule',
+      href: '/maintenance/schedules',
+      icon: <Calendar size={18} />,
+      roles: ['technician'],
+    },
+    {
+      title: 'Machine History',
+      href: '/machines',
+      icon: <History size={18} />,
+      roles: ['technician'],
+    },
+    {
+      title: 'Parts Inventory',
+      href: '/inventory',
+      icon: <Package size={18} />,
+      roles: ['technician'],
+    },
+  ];
+
+  // Admin specific menu items
+  const adminMenuItems = [
+    {
+      title: 'Maintenance',
+      href: '/maintenance',
+      icon: <Wrench size={18} />,
+      roles: ['admin', 'viewer'],
+      subItems: [
+        {
+          title: 'Tasks',
+          href: '/maintenance/tasks',
+          roles: ['admin', 'viewer'],
+        },
+        {
+          title: 'Schedules',
+          href: '/maintenance/schedules',
+          roles: ['admin', 'viewer'],
+        }
+      ]
+    },
+    {
+      title: 'Parts Inventory',
+      href: '/inventory',
+      icon: <Package size={18} />,
+      roles: ['admin', 'viewer'],
+    },
+    {
+      title: 'Reports',
+      href: '/reports',
+      icon: <FileText size={18} />,
+      roles: ['admin'],
+    },
+    {
+      title: 'Analytics',
+      href: '/analytics',
+      icon: <Activity size={18} />,
+      roles: ['admin'],
+    },
+    {
+      title: 'User Management',
+      href: '/users',
+      icon: <Users size={18} />,
+      roles: ['admin'],
+    },
+  ];
+
+  // Combine menu items based on user role
+  const menuItems = isAdmin 
+    ? [...commonMenuItems, ...adminMenuItems]
+    : isTechnician 
+      ? [...commonMenuItems, ...technicianMenuItems]
+      : commonMenuItems.filter(item => item.roles.includes('viewer'));
 
   const isItemActive = (href: string) => {
     return location.pathname === href || location.pathname.startsWith(`${href}/`);
@@ -123,75 +167,73 @@ export const Sidebar = () => {
       
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="px-2 space-y-1">
-          {menuItems
-            .filter((item) => item.roles.includes(user?.role || 'viewer'))
-            .map((item) => {
-              if (item.subItems) {
-                return (
-                  <li key={item.href}>
-                    <Collapsible 
-                      defaultOpen={isItemActive(item.href)}
-                      className="w-full"
-                    >
-                      <CollapsibleTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className={cn(
-                            "w-full justify-between text-sidebar-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent",
-                            isItemActive(item.href) && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                          )}
-                        >
-                          <div className="flex items-center">
-                            {item.icon}
-                            <span className="ml-3">{item.title}</span>
-                          </div>
-                          <ChevronDown className="h-4 w-4" />
-                        </Button>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <ul className="pl-6 mt-1 space-y-1">
-                          {item.subItems.filter((subItem) => 
-                            subItem.roles.includes(user?.role || 'viewer')
-                          ).map((subItem) => (
-                            <li key={subItem.href}>
-                              <NavLink
-                                to={subItem.href}
-                                className={({ isActive }) =>
-                                  cn(
-                                    "flex items-center px-3 py-2 text-sm rounded-md text-sidebar-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent",
-                                    isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                                  )
-                                }
-                              >
-                                <ChevronRight className="h-3 w-3 mr-1" />
-                                {subItem.title}
-                              </NavLink>
-                            </li>
-                          ))}
-                        </ul>
-                      </CollapsibleContent>
-                    </Collapsible>
-                  </li>
-                );
-              }
-              
+          {menuItems.map((item) => {
+            if (item.subItems) {
               return (
                 <li key={item.href}>
-                  <NavLink
-                    to={item.href}
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center px-3 py-2 rounded-md text-sidebar-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent",
-                        isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                      )
-                    }
+                  <Collapsible 
+                    defaultOpen={isItemActive(item.href)}
+                    className="w-full"
                   >
-                    {item.icon}
-                    <span className="ml-3">{item.title}</span>
-                  </NavLink>
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className={cn(
+                          "w-full justify-between text-sidebar-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent",
+                          isItemActive(item.href) && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                        )}
+                      >
+                        <div className="flex items-center">
+                          {item.icon}
+                          <span className="ml-3">{item.title}</span>
+                        </div>
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <ul className="pl-6 mt-1 space-y-1">
+                        {item.subItems.filter((subItem) => 
+                          subItem.roles.includes(user?.role || 'viewer')
+                        ).map((subItem) => (
+                          <li key={subItem.href}>
+                            <NavLink
+                              to={subItem.href}
+                              className={({ isActive }) =>
+                                cn(
+                                  "flex items-center px-3 py-2 text-sm rounded-md text-sidebar-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent",
+                                  isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                                )
+                              }
+                            >
+                              <ChevronRight className="h-3 w-3 mr-1" />
+                              {subItem.title}
+                            </NavLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </CollapsibleContent>
+                  </Collapsible>
                 </li>
               );
-            })}
+            }
+            
+            return (
+              <li key={item.href}>
+                <NavLink
+                  to={item.href}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center px-3 py-2 rounded-md text-sidebar-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent",
+                      isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    )
+                  }
+                >
+                  {item.icon}
+                  <span className="ml-3">{item.title}</span>
+                </NavLink>
+              </li>
+            );
+          })}
         </ul>
       </nav>
       
